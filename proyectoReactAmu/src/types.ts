@@ -6,4 +6,5 @@ export interface Videogame {
   hoursPlayed: number;
   status: GameStatus;
   platform: string;
+  imageUrl: string;
 }

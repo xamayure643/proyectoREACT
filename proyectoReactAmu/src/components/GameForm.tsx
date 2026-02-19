@@ -12,63 +12,81 @@ export default function GameForm({ onGameAdded }: Props) {
   const [platform, setPlatform] = useState('');
   const [status, setStatus] = useState<GameStatus>('Pendiente');
   const [hoursPlayed, setHoursPlayed] = useState(0);
+  const [imageUrl, setImageUrl] = useState(''); // Estado para la imagen
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    const newGameData = { title, platform, status, hoursPlayed };
+    const newGameData = { title, platform, status, hoursPlayed, imageUrl };
     try {
       const docRef = await addDoc(collection(db, 'videogames'), newGameData);
       onGameAdded({ id: docRef.id, ...newGameData });
-      
-      // Limpiamos el formulario tras guardar
-      setTitle(''); 
-      setPlatform(''); 
-      setHoursPlayed(0);
-      setStatus('Pendiente');
+      // Limpiar campos
+      setTitle(''); setPlatform(''); setHoursPlayed(0); setImageUrl('');
     } catch (error) {
-      console.error("Error al guardar:", error);
+      console.error("Detalles del error:", error); // Al usar la variable aquí, el rojo desaparece
       alert("Error al guardar en Firebase");
     }
   };
 
   return (
-    <form onSubmit={handleSubmit} style={{ backgroundColor: '#eee', padding: '20px', borderRadius: '8px', marginBottom: '20px', display: 'flex', flexDirection: 'column', gap: '10px' }}>
-      <input 
-        placeholder="Título del videojuego" 
-        required 
-        value={title} 
-        onChange={e => setTitle(e.target.value)} 
-        style={{ padding: '8px' }}
-      />
+    <form onSubmit={handleSubmit} style={{ 
+      backgroundColor: '#f8f9fa', padding: '20px', borderRadius: '12px', 
+      marginBottom: '30px', boxShadow: '0 4px 6px rgba(0,0,0,0.1)',
+      display: 'flex', flexDirection: 'column', gap: '12px' 
+    }}>
+      <h3 style={{ margin: '0 0 10px 0', color: '#333' }}>Añadir nuevo juego</h3>
       
-      <select value={platform} onChange={e => setPlatform(e.target.value)} required style={{ padding: '8px' }}>
-        <option value="">Selecciona plataforma...</option>
-        <option value="PC">PC</option>
-        <option value="PS5">PlayStation 5</option>
-        <option value="Switch">Nintendo Switch</option>
-        <option value="Xbox">Xbox Series</option>
-      </select>
-
-      <select value={status} onChange={e => setStatus(e.target.value as GameStatus)} style={{ padding: '8px' }}>
-        <option value="Pendiente">Pendiente</option>
-        <option value="Jugando">Jugando</option>
-        <option value="Completado">Completado</option>
-      </select>
-
-      <div style={{ display: 'flex', alignItems: 'center', gap: '10px' }}>
-        <label style={{ color: '#333' }}>Horas:</label>
-        <input 
-          type="number" 
-          min="0"
-          value={hoursPlayed} 
-          onChange={e => setHoursPlayed(Number(e.target.value))} 
-          style={{ padding: '8px', width: '80px' }}
-        />
+      <input placeholder="Título" required value={title} onChange={e => setTitle(e.target.value)} style={inputStyle} />
+      
+      <div style={{ display: 'flex', gap: '10px' }}>
+        <select value={platform} onChange={e => setPlatform(e.target.value)} required style={{ ...inputStyle, flex: 1 }}>
+          <option value="">Plataforma...</option>
+          <option value="PC">PC</option>
+          <option value="PS5">PlayStation 5</option>
+          <option value="Switch">Nintendo Switch</option>
+          <option value="Xbox">Xbox Series</option>
+        </select>
+        <select value={status} onChange={e => setStatus(e.target.value as GameStatus)} style={{ ...inputStyle, flex: 1 }}>
+          <option value="Pendiente">Pendiente</option>
+          <option value="Jugando">Jugando</option>
+          <option value="Completado">Completado</option>
+        </select>
       </div>
 
-      <button type="submit" style={{ backgroundColor: '#007BFF', color: 'white', padding: '10px', border: 'none', borderRadius: '4px', cursor: 'pointer' }}>
-        Añadir a la colección
+      <input 
+        placeholder="URL de la imagen (Carátula)" 
+        required 
+        value={imageUrl} 
+        onChange={e => setImageUrl(e.target.value)} 
+        style={inputStyle} 
+      />
+
+      {/* PREVISUALIZACIÓN EN TIEMPO REAL */}
+      {imageUrl && (
+        <div style={{ textAlign: 'center', marginTop: '10px' }}>
+          <p style={{ fontSize: '12px', color: '#666' }}>Previsualización:</p>
+          <img 
+            src={imageUrl} 
+            alt="Preview" 
+            style={{ width: '100px', height: '140px', objectFit: 'cover', borderRadius: '8px', border: '2px solid #007BFF' }} 
+            onError={(e) => (e.currentTarget.style.display = 'none')} // Oculta si la URL no es válida
+          />
+        </div>
+      )}
+
+      <div style={{ display: 'flex', alignItems: 'center', gap: '10px' }}>
+        <label style={{ color: '#333' }}>Horas jugadas:</label>
+        <input type="number" min="0" value={hoursPlayed} onChange={e => setHoursPlayed(Number(e.target.value))} style={{ ...inputStyle, width: '80px' }} />
+      </div>
+
+      <button type="submit" style={{ 
+        backgroundColor: '#007BFF', color: 'white', padding: '12px', 
+        border: 'none', borderRadius: '6px', cursor: 'pointer', fontWeight: 'bold' 
+      }}>
+        + Agregar a mi colección
       </button>
     </form>
   );
 }
+
+const inputStyle = { padding: '10px', borderRadius: '6px', border: '1px solid #ccc' };
