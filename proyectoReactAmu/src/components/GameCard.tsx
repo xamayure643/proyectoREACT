@@ -31,7 +31,6 @@ export default function GameCard({ game, onDelete, onUpdate }: Props) {
   };
 
   const handleCancel = () => {
-    // Resetear estados a los valores originales del juego
     setEditTitle(game.title);
     setEditPlatform(game.platform);
     setEditStatus(game.status);
@@ -44,95 +43,80 @@ export default function GameCard({ game, onDelete, onUpdate }: Props) {
   if (isEditing) {
     return (
       <div style={{ 
-        backgroundColor: '#fff', borderRadius: '16px', padding: '20px', 
-        border: '3px solid #007BFF', boxShadow: '0 10px 30px rgba(0,0,0,0.15)' 
+        backgroundColor: '#fff', borderRadius: '12px', padding: '15px', 
+        border: '2px solid #007BFF', boxShadow: '0 4px 15px rgba(0,0,0,0.1)',
+        display: 'flex', flexDirection: 'column', gap: '10px'
       }}>
-        <h3 style={{ margin: '0 0 15px 0', color: '#333' }}>Editar información</h3>
-        
-        <div style={{ display: 'flex', flexDirection: 'column', gap: '12px' }}>
-          <div style={fieldGroup}>
-            <label style={labelStyle}>Título:</label>
-            <input type="text" value={editTitle} onChange={(e) => setEditTitle(e.target.value)} style={inputStyle} />
-          </div>
-
-          <div style={fieldGroup}>
-            <label style={labelStyle}>Plataforma:</label>
-            <select value={editPlatform} onChange={(e) => setEditPlatform(e.target.value)} style={inputStyle}>
-              <option value="PC">PC</option>
-              <option value="PS5">PlayStation 5</option>
-              <option value="Switch">Nintendo Switch</option>
-              <option value="Xbox">Xbox Series</option>
-              <option value="Retro">Retro / Otros</option>
-            </select>
-          </div>
-
-          <div style={fieldGroup}>
-            <label style={labelStyle}>Estado:</label>
-            <select value={editStatus} onChange={(e) => setEditStatus(e.target.value as GameStatus)} style={inputStyle}>
-              <option value="Pendiente">Pendiente</option>
-              <option value="Jugando">Jugando</option>
-              <option value="Completado">Completado</option>
-            </select>
-          </div>
-
-          <div style={fieldGroup}>
-            <label style={labelStyle}>Horas:</label>
-            <input type="number" value={editHours} onChange={(e) => setEditHours(Number(e.target.value))} style={inputStyle} />
-          </div>
-
-          <div style={fieldGroup}>
-            <label style={labelStyle}>URL Imagen:</label>
-            <input type="text" value={editImageUrl} onChange={(e) => setEditImageUrl(e.target.value)} style={inputStyle} />
-          </div>
-
-          {/* Mini preview para confirmar el cambio de imagen */}
+        {/* Preview pequeña pero COMPLETA */}
+        <div style={{ height: '120px', backgroundColor: '#f9f9f9', borderRadius: '8px', display: 'flex', justifyContent: 'center' }}>
           <img 
             src={editImageUrl} 
             alt="Preview" 
-            style={{ width: '100%', height: '120px', objectFit: 'cover', borderRadius: '8px', marginTop: '5px' }} 
+            style={{ maxHeight: '100%', maxWidth: '100%', objectFit: 'contain' }} 
             onError={(e) => (e.currentTarget.style.display = 'none')}
           />
+        </div>
+        
+        <input type="text" value={editTitle} onChange={(e) => setEditTitle(e.target.value)} placeholder="Título" style={inputStyle} />
+        
+        <div style={{ display: 'flex', gap: '5px' }}>
+          <select value={editPlatform} onChange={(e) => setEditPlatform(e.target.value)} style={{ ...inputStyle, flex: 1 }}>
+            <option value="PC">PC</option>
+            <option value="PS5">PlayStation 5</option>
+            <option value="Switch">Nintendo Switch</option>
+            <option value="Xbox">Xbox Series</option>
+            <option value="Retro">Retro / Otros</option>
+          </select>
+          <input type="number" value={editHours} onChange={(e) => setEditHours(Number(e.target.value))} style={{ ...inputStyle, width: '70px' }} />
+        </div>
 
-          <div style={{ display: 'flex', gap: '10px', marginTop: '10px' }}>
-            <button onClick={handleSave} style={btnSave}>Guardar</button>
-            <button onClick={handleCancel} style={btnCancel}>Cancelar</button>
-          </div>
+        <select value={editStatus} onChange={(e) => setEditStatus(e.target.value as GameStatus)} style={inputStyle}>
+          <option value="Pendiente">Pendiente</option>
+          <option value="Jugando">Jugando</option>
+          <option value="Completado">Completado</option>
+        </select>
+
+        <input type="text" value={editImageUrl} onChange={(e) => setEditImageUrl(e.target.value)} placeholder="URL Imagen" style={inputStyle} />
+
+        <div style={{ display: 'flex', gap: '8px' }}>
+          <button onClick={handleSave} style={{ ...btnSmall, backgroundColor: '#007BFF', color: 'white' }}>Guardar</button>
+          <button onClick={handleCancel} style={{ ...btnSmall, backgroundColor: '#6c757d', color: 'white' }}>X</button>
         </div>
       </div>
     );
   }
 
-  // --- VISTA NORMAL (CARD GRANDE) ---
+  // --- VISTA NORMAL (ANCHA Y COMPACTA) ---
   return (
     <div style={{ 
-      backgroundColor: '#fff', borderRadius: '16px', overflow: 'hidden', 
-      boxShadow: '0 8px 20px rgba(0,0,0,0.08)', display: 'flex', flexDirection: 'column',
-      transition: 'transform 0.2s ease-in-out'
+      backgroundColor: '#fff', borderRadius: '12px', overflow: 'hidden', 
+      boxShadow: '0 4px 12px rgba(0,0,0,0.08)', display: 'flex', flexDirection: 'column',
+      border: '1px solid #eee', height: '100%'
     }}>
-      {/* Imagen ancha y alta */}
-      <img 
-        src={game.imageUrl || 'https://via.placeholder.com/400x600?text=Sin+Imagen'} 
-        alt={game.title} 
-        style={{ width: '100%', height: '350px', objectFit: 'cover' }} 
-      />
+      {/* Contenedor de imagen con altura fija para que no sea muy larga */}
+      <div style={{ height: '220px', backgroundColor: '#f3f3f3', display: 'flex', justifyContent: 'center', alignItems: 'center', padding: '10px' }}>
+        <img 
+          src={game.imageUrl || 'https://via.placeholder.com/300x400?text=Sin+Imagen'} 
+          alt={game.title} 
+          style={{ maxHeight: '100%', maxWidth: '100%', objectFit: 'contain' }} 
+        />
+      </div>
 
-      <div style={{ padding: '20px' }}>
-        <h2 style={{ margin: '0 0 10px 0', fontSize: '1.4rem', color: '#111', fontWeight: 'bold' }}>
+      <div style={{ padding: '15px', display: 'flex', flexDirection: 'column', gap: '8px', flexGrow: 1 }}>
+        <h3 style={{ margin: 0, fontSize: '1.1rem', color: '#111', whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis' }}>
           {game.title}
-        </h2>
+        </h3>
         
-        <div style={{ display: 'flex', flexDirection: 'column', gap: '6px', marginBottom: '20px' }}>
-          <p style={infoText}><strong>🎮 Plataforma:</strong> {game.platform}</p>
-          <p style={infoText}>
-            <strong>📌 Estado:</strong> 
-            <span style={statusBadge(game.status)}>{game.status}</span>
-          </p>
-          <p style={infoText}><strong>⏱️ Tiempo:</strong> {game.hoursPlayed} horas</p>
+        <div style={{ fontSize: '0.85rem', color: '#666' }}>
+          <strong>{game.platform}</strong> · {game.hoursPlayed}h
         </div>
-        
-        <div style={{ display: 'flex', gap: '10px' }}>
-          <button onClick={() => setIsEditing(true)} style={btnEdit}>Editar</button>
-          <button onClick={() => game.id && onDelete(game.id)} style={btnDelete}>Borrar</button>
+
+        <div style={{ marginTop: 'auto', display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+          <span style={statusBadge(game.status)}>{game.status}</span>
+          <div style={{ display: 'flex', gap: '5px' }}>
+            <button onClick={() => setIsEditing(true)} style={btnAction}>✏️</button>
+            <button onClick={() => game.id && onDelete(game.id)} style={{ ...btnAction, color: '#dc2626' }}>🗑️</button>
+          </div>
         </div>
       </div>
     </div>
@@ -140,30 +124,12 @@ export default function GameCard({ game, onDelete, onUpdate }: Props) {
 }
 
 // --- ESTILOS ---
-const fieldGroup = { display: 'flex', flexDirection: 'column' as const, gap: '4px' };
-const labelStyle = { fontSize: '0.85rem', fontWeight: 'bold', color: '#666' };
-const inputStyle = { padding: '10px', borderRadius: '8px', border: '1px solid #ddd', fontSize: '0.9rem' };
-const infoText = { margin: 0, fontSize: '0.95rem', color: '#444' };
-
-const btnEdit = { 
-  flex: 1, padding: '12px', backgroundColor: '#f0f0f0', color: '#333', 
-  border: 'none', borderRadius: '8px', cursor: 'pointer', fontWeight: 'bold' as const
-};
-const btnDelete = { 
-  flex: 1, padding: '12px', backgroundColor: '#fee2e2', color: '#dc2626', 
-  border: 'none', borderRadius: '8px', cursor: 'pointer', fontWeight: 'bold' as const
-};
-const btnSave = { 
-  flex: 1, padding: '12px', backgroundColor: '#007BFF', color: 'white', 
-  border: 'none', borderRadius: '8px', cursor: 'pointer', fontWeight: 'bold' as const
-};
-const btnCancel = { 
-  flex: 1, padding: '12px', backgroundColor: '#6c757d', color: 'white', 
-  border: 'none', borderRadius: '8px', cursor: 'pointer', fontWeight: 'bold' as const
-};
+const inputStyle = { padding: '8px', borderRadius: '6px', border: '1px solid #ddd', fontSize: '0.85rem' };
+const btnSmall = { flex: 1, padding: '8px', border: 'none', borderRadius: '6px', cursor: 'pointer', fontWeight: 'bold' as const, fontSize: '0.8rem' };
+const btnAction = { backgroundColor: '#f0f0f0', border: 'none', padding: '8px', borderRadius: '6px', cursor: 'pointer', fontSize: '1rem' };
 
 const statusBadge = (status: string) => ({
-  marginLeft: '8px', padding: '4px 10px', borderRadius: '20px', fontSize: '0.8rem', fontWeight: 'bold' as const,
+  padding: '3px 10px', borderRadius: '20px', fontSize: '0.75rem', fontWeight: 'bold' as const,
   backgroundColor: status === 'Completado' ? '#dcfce7' : status === 'Jugando' ? '#fef9c3' : '#f3f4f6',
   color: status === 'Completado' ? '#166534' : status === 'Jugando' ? '#854d0e' : '#374151',
 });
