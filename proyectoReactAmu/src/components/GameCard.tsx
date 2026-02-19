@@ -46,12 +46,13 @@ export default function GameCard({ game, onDelete, onUpdate }: Props) {
         <div style={{ padding: '20px' }}>
           <h3 style={{ margin: '0 0 15px 0', color: '#333' }}>Editar juego</h3>
 
-          {/* Preview de la imagen al editar */}
-          <div style={{ marginBottom: '15px', borderRadius: '8px', overflow: 'hidden', height: '150px', backgroundColor: '#f0f0f0' }}>
+          {/* Preview de la imagen ARREGLADO: Ahora usa 'contain' y está centrado */}
+          <div style={{ marginBottom: '15px', borderRadius: '8px', overflow: 'hidden', height: '150px', backgroundColor: '#f0f0f0', display: 'flex', justifyContent: 'center', alignItems: 'center' }}>
             <img
               src={editImageUrl}
               alt="Preview"
-              style={{ width: '100%', height: '100%', objectFit: 'cover' }}
+              // Cambiamos cover por contain y usamos max-width/height
+              style={{ maxWidth: '100%', maxHeight: '100%', objectFit: 'contain' }}
               onError={(e) => (e.currentTarget.src = 'https://via.placeholder.com/400x200?text=Sin+Imagen')}
             />
           </div>
@@ -86,7 +87,7 @@ export default function GameCard({ game, onDelete, onUpdate }: Props) {
   // --- VISTA NORMAL ---
   return (
     <div style={cardStyle}>
-      {/* Imagen de cabecera que ocupa todo el ancho */}
+      {/* Imagen de cabecera normal */}
       <div style={{ height: '200px', overflow: 'hidden', backgroundColor: '#f0f0f0' }}>
         <img
           src={game.imageUrl || 'https://via.placeholder.com/400x200?text=Sin+Imagen'}
@@ -124,7 +125,7 @@ const cardStyle = {
   border: '1px solid #eee',
   display: 'flex',
   flexDirection: 'column' as const,
-  height: '100%', // Para que todas las cards tengan la misma altura en el grid
+  height: '100%',
 };
 
 const inputStyle = { padding: '10px', borderRadius: '6px', border: '1px solid #ddd', fontSize: '0.95rem' };
