@@ -13,12 +13,9 @@ export default function GameList({ games, onDelete, onUpdate }: Props) {
   return (
     <div style={{ 
       display: 'grid', 
-      // Forzamos 3 columnas. En móviles se ajustará automáticamente si el espacio es poco.
       gridTemplateColumns: 'repeat(auto-fit, minmax(300px, 1fr))',
-      // Para asegurar exactamente 3 en pantallas grandes, podrías usar: 'repeat(3, 1fr)'
       gap: '25px', 
     }}>
-      {/* Si quieres forzar 3 SIEMPRE en PC, cambia auto-fit por 3 */}
       <style>{`
         @media (min-width: 900px) {
           .game-grid { grid-template-columns: repeat(3, 1fr) !important; }

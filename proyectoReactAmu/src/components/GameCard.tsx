@@ -10,7 +10,6 @@ interface Props {
 export default function GameCard({ game, onDelete, onUpdate }: Props) {
   const [isEditing, setIsEditing] = useState(false);
 
-  // Estados para la edición de TODOS los campos
   const [editTitle, setEditTitle] = useState(game.title);
   const [editPlatform, setEditPlatform] = useState(game.platform);
   const [editStatus, setEditStatus] = useState<GameStatus>(game.status);
@@ -39,19 +38,16 @@ export default function GameCard({ game, onDelete, onUpdate }: Props) {
     setIsEditing(false);
   };
 
-  // --- VISTA MODO EDICIÓN ---
   if (isEditing) {
     return (
       <div style={cardStyle}>
         <div style={{ padding: '20px' }}>
           <h3 style={{ margin: '0 0 15px 0', color: '#333' }}>Editar juego</h3>
 
-          {/* Preview de la imagen ARREGLADO: Ahora usa 'contain' y está centrado */}
           <div style={{ marginBottom: '15px', borderRadius: '8px', overflow: 'hidden', height: '150px', backgroundColor: '#f0f0f0', display: 'flex', justifyContent: 'center', alignItems: 'center' }}>
             <img
               src={editImageUrl}
               alt="Preview"
-              // Cambiamos cover por contain y usamos max-width/height
               style={{ maxWidth: '100%', maxHeight: '100%', objectFit: 'contain' }}
               onError={(e) => (e.currentTarget.src = 'https://via.placeholder.com/400x200?text=Sin+Imagen')}
             />
@@ -84,10 +80,8 @@ export default function GameCard({ game, onDelete, onUpdate }: Props) {
     );
   }
 
-  // --- VISTA NORMAL ---
   return (
     <div style={cardStyle}>
-      {/* Imagen de cabecera normal */}
       <div style={{ height: '200px', overflow: 'hidden', backgroundColor: '#f0f0f0' }}>
         <img
           src={game.imageUrl || 'https://via.placeholder.com/400x200?text=Sin+Imagen'}
@@ -115,7 +109,6 @@ export default function GameCard({ game, onDelete, onUpdate }: Props) {
   );
 }
 
-// --- ESTILOS ---
 const cardStyle = {
   backgroundColor: '#fff',
   borderRadius: '12px',

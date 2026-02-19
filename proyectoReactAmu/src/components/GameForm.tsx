@@ -12,8 +12,7 @@ export default function GameForm({ onGameAdded }: Props) {
   const [platform, setPlatform] = useState('');
   const [status, setStatus] = useState<GameStatus>('Pendiente');
   const [hoursPlayed, setHoursPlayed] = useState(0);
-  const [imageUrl, setImageUrl] = useState(''); // Estado para la imagen
-
+  const [imageUrl, setImageUrl] = useState('');
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     const newGameData = { title, platform, status, hoursPlayed, imageUrl };
@@ -23,7 +22,7 @@ export default function GameForm({ onGameAdded }: Props) {
       // Limpiar campos
       setTitle(''); setPlatform(''); setHoursPlayed(0); setImageUrl('');
     } catch (error) {
-      console.error("Detalles del error:", error); // Al usar la variable aquí, el rojo desaparece
+      console.error("Detalles del error:", error);
       alert("Error al guardar en Firebase");
     }
   };
@@ -61,7 +60,6 @@ export default function GameForm({ onGameAdded }: Props) {
         style={inputStyle} 
       />
 
-      {/* PREVISUALIZACIÓN EN TIEMPO REAL */}
       {imageUrl && (
         <div style={{ textAlign: 'center', marginTop: '10px' }}>
           <p style={{ fontSize: '12px', color: '#666' }}>Previsualización:</p>
@@ -69,7 +67,7 @@ export default function GameForm({ onGameAdded }: Props) {
             src={imageUrl} 
             alt="Preview" 
             style={{ width: '100px', height: '140px', objectFit: 'cover', borderRadius: '8px', border: '2px solid #007BFF' }} 
-            onError={(e) => (e.currentTarget.style.display = 'none')} // Oculta si la URL no es válida
+            onError={(e) => (e.currentTarget.style.display = 'none')}
           />
         </div>
       )}

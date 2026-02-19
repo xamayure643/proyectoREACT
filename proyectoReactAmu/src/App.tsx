@@ -36,10 +36,8 @@ export default function App() {
   };
 
   return (
-    // Contenedor principal
     <div style={{ backgroundColor: '#f4f7f6', minHeight: '100vh', fontFamily: 'system-ui, sans-serif' }}>
       
-      {/* --- ESTE ES EL TRUCO PARA QUITAR LOS MÁRGENES Y LA BARRA LATERAL --- */}
       <style>{`
         body, html {
           margin: 0;
@@ -53,7 +51,6 @@ export default function App() {
         }
       `}</style>
 
-      {/* HEADER: Ahora sí llenará todo el ancho superior */}
       <header style={{ 
         backgroundColor: '#111', 
         color: '#fff', 
@@ -106,7 +103,6 @@ export default function App() {
         )}
       </main>
 
-      {/* Pequeña animación para el formulario */}
       <style>{`
         @keyframes fadeIn {
           from { opacity: 0; transform: translateY(-10px); }
