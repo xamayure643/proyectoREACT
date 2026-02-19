@@ -8,6 +8,7 @@ import GameList from './components/GameList';
 export default function App() {
   const [games, setGames] = useState<Videogame[]>([]);
   const [loading, setLoading] = useState(true);
+  const [isFormOpen, setIsFormOpen] = useState(false); // Para mostrar/ocultar el form
 
   useEffect(() => {
     const fetchGames = async () => {
@@ -24,7 +25,10 @@ export default function App() {
     fetchGames();
   }, []);
 
-  const handleAdd = (game: Videogame) => setGames([...games, game]);
+  const handleAdd = (game: Videogame) => {
+    setGames([...games, game]);
+    setIsFormOpen(false); // Cerramos el form al añadir
+  };
 
   const handleDelete = async (id: string) => {
     if (window.confirm("¿Borrar juego?")) {
@@ -39,10 +43,39 @@ export default function App() {
   };
 
   return (
-    <div style={{ maxWidth: '600px', margin: '0 auto', padding: '20px', fontFamily: 'Arial' }}>
-      <h1 style={{ textAlign: 'center', color: '#333' }}>🎮 Mis Juegos</h1>
-      <GameForm onGameAdded={handleAdd} />
-      {loading ? <p style={{ color: '#333' }}>Cargando...</p> : <GameList games={games} onDelete={handleDelete} onUpdate={handleUpdate} />}
+    <div style={{ backgroundColor: '#f0f2f5', minHeight: '100vh' }}>
+      {/* --- MENU SUPERIOR (HEADER) --- */}
+      <header style={{
+        backgroundColor: '#1a1a1a', color: 'white', padding: '15px 30px',
+        display: 'flex', justifyContent: 'space-between', alignItems: 'center',
+        position: 'sticky', top: 0, zIndex: 1000, boxShadow: '0 2px 10px rgba(0,0,0,0.3)'
+      }}>
+        <h1 style={{ margin: 0, fontSize: '1.5rem' }}>🎮 GameVault</h1>
+        <button 
+          onClick={() => setIsFormOpen(!isFormOpen)}
+          style={{
+            backgroundColor: '#007BFF', color: 'white', border: 'none', 
+            padding: '10px 20px', borderRadius: '8px', cursor: 'pointer', fontWeight: 'bold'
+          }}
+        >
+          {isFormOpen ? 'Cerrar' : '+ Añadir Juego'}
+        </button>
+      </header>
+
+      <main style={{ maxWidth: '1200px', margin: '0 auto', padding: '30px' }}>
+        {/* Sección del formulario (solo se ve si pulsas el botón) */}
+        {isFormOpen && (
+          <div style={{ marginBottom: '40px' }}>
+             <GameForm onGameAdded={handleAdd} />
+          </div>
+        )}
+
+        {loading ? (
+          <p style={{ textAlign: 'center', fontSize: '1.2rem', color: '#666' }}>Cargando colección...</p>
+        ) : (
+          <GameList games={games} onDelete={handleDelete} onUpdate={handleUpdate} />
+        )}
+      </main>
     </div>
   );
 }
