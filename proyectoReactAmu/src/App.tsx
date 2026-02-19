@@ -64,7 +64,7 @@ export default function App() {
         width: '100%',
         boxShadow: '0 2px 10px rgba(0,0,0,0.2)'
       }}>
-        <h1 style={{ margin: 0, fontSize: '1.4rem' }}>🎮 GameVault</h1>
+        <h1 style={{ margin: 0, fontSize: '1.4rem' }}>Mi lista de juegos</h1>
         <button 
           onClick={() => setShowForm(!showForm)} 
           style={{ 

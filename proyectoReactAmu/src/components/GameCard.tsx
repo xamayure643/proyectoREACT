@@ -101,8 +101,8 @@ export default function GameCard({ game, onDelete, onUpdate }: Props) {
         </p>
 
         <div style={{ marginTop: 'auto', paddingTop: '15px', display: 'flex', gap: '10px' }}>
-          <button onClick={() => setIsEditing(true)} style={iconBtnStyle} title="Editar">✏️</button>
-          <button onClick={() => game.id && onDelete(game.id)} style={{...iconBtnStyle, color: '#dc3545'}} title="Borrar">🗑️</button>
+          <button onClick={() => setIsEditing(true)} style={{...iconBtnStyle, color: '#007BFF'}} title="Editar">Editar</button>
+          <button onClick={() => game.id && onDelete(game.id)} style={{...iconBtnStyle, color: '#dc3545'}} title="Borrar">Eliminar</button>
         </div>
       </div>
     </div>
