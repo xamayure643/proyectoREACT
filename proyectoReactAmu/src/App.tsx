@@ -8,7 +8,7 @@ import GameList from './components/GameList';
 export default function App() {
   const [games, setGames] = useState<Videogame[]>([]);
   const [loading, setLoading] = useState(true);
-  const [isFormOpen, setIsFormOpen] = useState(false); // Para mostrar/ocultar el form
+  const [showForm, setShowForm] = useState(false);
 
   useEffect(() => {
     const fetchGames = async () => {
@@ -16,22 +16,15 @@ export default function App() {
         const querySnapshot = await getDocs(collection(db, 'videogames'));
         const docs = querySnapshot.docs.map(d => ({ id: d.id, ...d.data() } as Videogame));
         setGames(docs);
-      } catch (e) {
-        console.error(e);
-      } finally {
-        setLoading(false);
-      }
+      } catch (e) { console.error(e); } finally { setLoading(false); }
     };
     fetchGames();
   }, []);
 
-  const handleAdd = (game: Videogame) => {
-    setGames([...games, game]);
-    setIsFormOpen(false); // Cerramos el form al añadir
-  };
-
+  const handleAdd = (game: Videogame) => { setGames([...games, game]); setShowForm(false); };
+  
   const handleDelete = async (id: string) => {
-    if (window.confirm("¿Borrar juego?")) {
+    if (window.confirm("¿Eliminar juego?")) {
       await deleteDoc(doc(db, 'videogames', id));
       setGames(games.filter(g => g.id !== id));
     }
@@ -43,39 +36,83 @@ export default function App() {
   };
 
   return (
-    <div style={{ backgroundColor: '#f0f2f5', minHeight: '100vh' }}>
-      {/* --- MENU SUPERIOR (HEADER) --- */}
-      <header style={{
-        backgroundColor: '#1a1a1a', color: 'white', padding: '15px 30px',
-        display: 'flex', justifyContent: 'space-between', alignItems: 'center',
-        position: 'sticky', top: 0, zIndex: 1000, boxShadow: '0 2px 10px rgba(0,0,0,0.3)'
+    // Contenedor principal
+    <div style={{ backgroundColor: '#f4f7f6', minHeight: '100vh', fontFamily: 'system-ui, sans-serif' }}>
+      
+      {/* --- ESTE ES EL TRUCO PARA QUITAR LOS MÁRGENES Y LA BARRA LATERAL --- */}
+      <style>{`
+        body, html {
+          margin: 0;
+          padding: 0;
+          width: 100%;
+          height: 100%;
+          overflow-x: hidden; /* Evita que la página se mueva hacia los lados */
+        }
+        * {
+          box-sizing: border-box; /* Asegura que el padding no añada tamaño extra */
+        }
+      `}</style>
+
+      {/* HEADER: Ahora sí llenará todo el ancho superior */}
+      <header style={{ 
+        backgroundColor: '#111', 
+        color: '#fff', 
+        padding: '15px 5%', 
+        display: 'flex', 
+        justifyContent: 'space-between', 
+        alignItems: 'center', 
+        position: 'sticky', 
+        top: 0, 
+        zIndex: 100,
+        width: '100%',
+        boxShadow: '0 2px 10px rgba(0,0,0,0.2)'
       }}>
-        <h1 style={{ margin: 0, fontSize: '1.5rem' }}>🎮 GameVault</h1>
+        <h1 style={{ margin: 0, fontSize: '1.4rem' }}>🎮 GameVault</h1>
         <button 
-          onClick={() => setIsFormOpen(!isFormOpen)}
-          style={{
-            backgroundColor: '#007BFF', color: 'white', border: 'none', 
-            padding: '10px 20px', borderRadius: '8px', cursor: 'pointer', fontWeight: 'bold'
+          onClick={() => setShowForm(!showForm)} 
+          style={{ 
+            backgroundColor: '#007BFF', 
+            color: '#fff', 
+            border: 'none', 
+            padding: '10px 20px', 
+            borderRadius: '8px', 
+            fontWeight: 'bold', 
+            cursor: 'pointer',
+            transition: 'background 0.2s'
           }}
+          onMouseOver={(e) => e.currentTarget.style.backgroundColor = '#0056b3'}
+          onMouseOut={(e) => e.currentTarget.style.backgroundColor = '#007BFF'}
         >
-          {isFormOpen ? 'Cerrar' : '+ Añadir Juego'}
+          {showForm ? 'Cerrar' : '+ Añadir Juego'}
         </button>
       </header>
 
-      <main style={{ maxWidth: '1200px', margin: '0 auto', padding: '30px' }}>
-        {/* Sección del formulario (solo se ve si pulsas el botón) */}
-        {isFormOpen && (
-          <div style={{ marginBottom: '40px' }}>
-             <GameForm onGameAdded={handleAdd} />
+      <main style={{ maxWidth: '1200px', margin: '0 auto', padding: '40px 5%' }}>
+        {showForm && (
+          <div style={{ 
+            marginBottom: '40px',
+            animation: 'fadeIn 0.3s ease-in' 
+          }}>
+            <GameForm onGameAdded={handleAdd} />
           </div>
         )}
-
+        
         {loading ? (
-          <p style={{ textAlign: 'center', fontSize: '1.2rem', color: '#666' }}>Cargando colección...</p>
+          <div style={{ textAlign: 'center', marginTop: '50px' }}>
+            <p style={{ color: '#666', fontSize: '1.2rem' }}>Cargando colección...</p>
+          </div>
         ) : (
           <GameList games={games} onDelete={handleDelete} onUpdate={handleUpdate} />
         )}
       </main>
+
+      {/* Pequeña animación para el formulario */}
+      <style>{`
+        @keyframes fadeIn {
+          from { opacity: 0; transform: translateY(-10px); }
+          to { opacity: 1; transform: translateY(0); }
+        }
+      `}</style>
     </div>
   );
 }
